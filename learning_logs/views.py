@@ -30,7 +30,6 @@ def topics(request):
 def topic(request, topic_id):
     """Displays one topic and all its entries."""
     topic = get_object_or_404(Topic, id=topic_id)
-
     check_topic_owner(topic.owner, request.user)
 
     entries = topic.entry_set.order_by('-date_added')
@@ -58,8 +57,7 @@ def new_topic(request):
 @login_required
 def new_entry(request, topic_id):
     """Adds a new post on a specific topic."""
-    topic = Topic.objects.get(id=topic_id)
-
+    topic = get_object_or_404(Topic, id=topic_id)
     check_topic_owner(topic.owner, request.user)
 
     if request.method != 'POST':
@@ -79,9 +77,8 @@ def new_entry(request, topic_id):
 @login_required
 def edit_entry(request, entry_id):
     """Edits an existing entry."""
-    entry = Entry.objects.get(id=entry_id)
+    entry = get_object_or_404(Entry, id=entry_id)
     topic = entry.topic
-
     check_topic_owner(topic.owner, request.user)
 
     if request.method != 'POST':
